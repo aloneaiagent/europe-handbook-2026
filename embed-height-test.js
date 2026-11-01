@@ -21,7 +21,13 @@
   addEventListener('load',send);
   addEventListener('hashchange',()=>requestAnimationFrame(send));
   addEventListener('message',event=>{
-    if(event.origin!==target||event.data?.kind!=='europe-handbook-navigate')return;
+    if(event.origin!==target)return;
+    if(event.data?.kind==='europe-handbook-viewport'){
+      document.documentElement.style.setProperty('--embed-dialog-top',Math.max(0,Number(event.data.top)||0)+'px');
+      document.documentElement.style.setProperty('--embed-dialog-max-height',Math.max(200,Number(event.data.maxHeight)||600)+'px');
+      return;
+    }
+    if(event.data?.kind!=='europe-handbook-navigate')return;
     const hash=event.data.hash;
     if(typeof hash==='string'&&/^#(?:overview|day-2026-11-(?:0[2-9]|1[0-8])(?:-guide|-food)?)$/.test(hash))location.hash=hash;
   });

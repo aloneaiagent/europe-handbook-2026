@@ -64,8 +64,10 @@
     return a;
   };
   const updateVisibility=()=>{
-    if(!layout?.nav){host.style.display='none';return}
     const frameTop=scrollY+frame.getBoundingClientRect().top;
+    frame.contentWindow.postMessage({kind:'europe-handbook-viewport',
+      top:Math.max(16,Math.ceil(scrollY-frameTop+innerHeight*.08)),maxHeight:Math.floor(innerHeight*.84)},childOrigin);
+    if(!layout?.nav){host.style.display='none';return}
     host.style.display=scrollY>frameTop+layout.nav.top-4?'block':'none';
   };
   addEventListener('scroll',updateVisibility,{passive:true});
