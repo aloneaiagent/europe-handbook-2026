@@ -1,6 +1,9 @@
 (()=>{
   const frame=document.getElementById('europeFlowFrame');
   if(!frame)return;
+  document.documentElement.style.overflowAnchor='none';
+  document.body.style.overflowAnchor='none';
+  frame.style.overflowAnchor='none';
   const childOrigin='https://aloneaiagent.github.io';
   const host=document.createElement('div');
   host.id='europeStickyNavigation';
