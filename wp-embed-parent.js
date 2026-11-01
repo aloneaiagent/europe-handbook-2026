@@ -26,9 +26,16 @@
     Object.assign(img.style,{display:'block',width:'100%',height:'100%',objectFit:'cover',objectPosition:'center center'});
     const skip=document.createElement('button');
     skip.type='button';skip.setAttribute('aria-label','跳过封面，进入总览');skip.textContent='5s';
-    Object.assign(skip.style,{position:'absolute',top:'max(18px,env(safe-area-inset-top))',right:'18px',width:'54px',height:'54px',border:'4px solid #d97343',borderRadius:'50%',boxShadow:'inset 0 0 0 2px #b8d2e9',background:'#173554e8',color:'#fff',font:'600 16px -apple-system,sans-serif'});
+    Object.assign(skip.style,{position:'absolute',top:'max(18px,env(safe-area-inset-top))',right:'18px',boxSizing:'border-box',display:'grid',placeItems:'center',padding:'0',width:'54px',height:'54px',minWidth:'0',minHeight:'0',appearance:'none',border:'4px solid #d97343',borderRadius:'50%',boxShadow:'inset 0 0 0 2px #b8d2e9',background:'#173554e8',color:'#fff',font:'600 16px -apple-system,sans-serif'});
     skip.addEventListener('click',closeCover);
-    cover.append(img,skip);document.body.append(cover);
+    const title=document.createElement('div');
+    Object.assign(title.style,{position:'absolute',left:'0',right:'0',bottom:'0',padding:'65px 20px calc(env(safe-area-inset-bottom) + 25px)',textAlign:'center',color:'#fff',background:'linear-gradient(transparent,#071a32d9)',fontFamily:'Georgia,"Songti SC",serif'});
+    const byline=document.createElement('small');byline.textContent='NICOLAS LEE · EUROPE 2026';
+    Object.assign(byline.style,{display:'block',font:'600 11px -apple-system,sans-serif',letterSpacing:'4px',marginBottom:'13px'});
+    const name=document.createElement('strong');name.textContent='欧洲历险记';
+    Object.assign(name.style,{display:'block',fontSize:'clamp(30px,9vw,48px)',lineHeight:'1.2'});
+    title.append(byline,name);
+    cover.append(img,title,skip);document.body.append(cover);
     const start=()=>{
       if(!cover.isConnected)return;
       let count=5;clearInterval(coverTimer);
