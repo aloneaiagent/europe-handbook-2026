@@ -60,9 +60,9 @@ html{scroll-behavior:smooth;scroll-padding-top:20px}body{background:var(--paper)
 html:has(#welcomeCover[open]),body:has(#welcomeCover[open]){overflow:hidden;overscroll-behavior:none;background:#0b1725}
 
 /* Extend the artwork beyond the dynamic viewport into Safari's exposed background. */
-html:has(#welcomeCover[open]),body:has(#welcomeCover[open]){background:#93bce1 url("assets/europe-cover-iphone17.png") center top / 100% auto no-repeat;min-height:100vh;min-height:100lvh}
+html:has(#welcomeCover[open]),body:has(#welcomeCover[open]){background:#93bce1 url("assets/europe-cover-iphone17.webp") center top / 100% auto no-repeat;min-height:100vh;min-height:100lvh}
 #welcomeCover{background:transparent;overflow:visible}
-#welcomeCover::backdrop{background:#93bce1 url("assets/europe-cover-iphone17.png") center top / cover no-repeat}
+#welcomeCover::backdrop{background:#93bce1 url("assets/europe-cover-iphone17.webp") center top / cover no-repeat}
 #welcomeCover .cover-frame{overflow:visible}
 #welcomeCover .cover-frame>img{top:calc(-1 * env(safe-area-inset-top,0px));bottom:auto;height:calc(100vh + env(safe-area-inset-top,0px) + env(safe-area-inset-bottom,0px));height:calc(100lvh + env(safe-area-inset-top,0px) + env(safe-area-inset-bottom,0px));min-height:100%;object-fit:cover;object-position:center top;pointer-events:none}
 

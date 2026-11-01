@@ -5,7 +5,7 @@
   document.body.style.overflowAnchor='none';
   frame.style.overflowAnchor='none';
   const childOrigin='https://aloneaiagent.github.io';
-  const coverUrl=childOrigin+'/europe-handbook-2026/assets/europe-cover-iphone17.png';
+  const coverUrl=childOrigin+'/europe-handbook-2026/assets/europe-cover-iphone17.webp';
   let coverTimer;
   const closeCover=()=>{
     clearInterval(coverTimer);
