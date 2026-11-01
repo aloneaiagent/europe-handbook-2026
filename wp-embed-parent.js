@@ -32,7 +32,7 @@
   const updateVisibility=()=>{
     if(!layout?.nav){host.style.display='none';return}
     const frameTop=scrollY+frame.getBoundingClientRect().top;
-    host.style.display=scrollY>frameTop+layout.nav.top+layout.nav.height-4?'block':'none';
+    host.style.display=scrollY>frameTop+layout.nav.top-4?'block':'none';
   };
   addEventListener('scroll',updateVisibility,{passive:true});
   addEventListener('resize',updateVisibility);
