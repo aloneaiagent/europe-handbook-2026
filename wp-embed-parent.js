@@ -20,13 +20,13 @@
     cover.id='europeParentCover';
     cover.setAttribute('role','dialog');
     cover.setAttribute('aria-label','欧洲历险记封面');
-    Object.assign(cover.style,{position:'fixed',inset:'0',zIndex:'2147483647',background:'#081727',overflow:'hidden'});
+    Object.assign(cover.style,{position:'fixed',inset:'0',width:'100vw',height:'100dvh',minHeight:'100svh',zIndex:'2147483647',background:'#081727',overflow:'hidden'});
     const img=document.createElement('img');
     img.src=coverUrl;img.alt='欧洲教堂、美术馆与音乐之旅插画';
-    Object.assign(img.style,{display:'block',width:'100%',height:'100%',objectFit:'cover'});
+    Object.assign(img.style,{display:'block',width:'100%',height:'100%',objectFit:'cover',objectPosition:'center center'});
     const skip=document.createElement('button');
     skip.type='button';skip.setAttribute('aria-label','跳过封面，进入总览');skip.textContent='5s';
-    Object.assign(skip.style,{position:'absolute',top:'max(18px,env(safe-area-inset-top))',right:'18px',width:'48px',height:'48px',border:'1px solid #ffffff77',borderRadius:'50%',background:'#10233cdd',color:'#fff',font:'600 16px -apple-system,sans-serif'});
+    Object.assign(skip.style,{position:'absolute',top:'max(18px,env(safe-area-inset-top))',right:'18px',width:'54px',height:'54px',border:'4px solid #d97343',borderRadius:'50%',boxShadow:'inset 0 0 0 2px #b8d2e9',background:'#173554e8',color:'#fff',font:'600 16px -apple-system,sans-serif'});
     skip.addEventListener('click',closeCover);
     cover.append(img,skip);document.body.append(cover);
     const start=()=>{
