@@ -5,6 +5,37 @@
   document.body.style.overflowAnchor='none';
   frame.style.overflowAnchor='none';
   const childOrigin='https://aloneaiagent.github.io';
+  const coverUrl=childOrigin+'/europe-handbook-2026/assets/europe-cover-iphone17.png';
+  let coverTimer;
+  const closeCover=()=>{
+    clearInterval(coverTimer);
+    document.getElementById('europeParentCover')?.remove();
+    try{sessionStorage.setItem('europe-parent-cover-seen','1')}catch{}
+    frame.contentWindow.postMessage({kind:'europe-handbook-navigate',hash:'#overview'},childOrigin);
+    scrollTo({top:0,left:0,behavior:'instant'});
+  };
+  const openCover=()=>{
+    document.getElementById('europeParentCover')?.remove();
+    const cover=document.createElement('div');
+    cover.id='europeParentCover';
+    cover.setAttribute('role','dialog');
+    cover.setAttribute('aria-label','欧洲历险记封面');
+    Object.assign(cover.style,{position:'fixed',inset:'0',zIndex:'2147483647',background:'#081727',overflow:'hidden'});
+    const img=document.createElement('img');
+    img.src=coverUrl;img.alt='欧洲教堂、美术馆与音乐之旅插画';
+    Object.assign(img.style,{display:'block',width:'100%',height:'100%',objectFit:'cover'});
+    const skip=document.createElement('button');
+    skip.type='button';skip.setAttribute('aria-label','跳过封面，进入总览');skip.textContent='5s';
+    Object.assign(skip.style,{position:'absolute',top:'max(18px,env(safe-area-inset-top))',right:'18px',width:'48px',height:'48px',border:'1px solid #ffffff77',borderRadius:'50%',background:'#10233cdd',color:'#fff',font:'600 16px -apple-system,sans-serif'});
+    skip.addEventListener('click',closeCover);
+    cover.append(img,skip);document.body.append(cover);
+    const start=()=>{
+      if(!cover.isConnected)return;
+      let count=5;clearInterval(coverTimer);
+      coverTimer=setInterval(()=>{if(document.hidden)return;count--;skip.textContent=Math.max(0,count)+'s';if(count<=0)closeCover()},1000);
+    };
+    if(img.complete)start();else{img.addEventListener('load',start,{once:true});img.addEventListener('error',start,{once:true})}
+  };
   const host=document.createElement('div');
   host.id='europeStickyNavigation';
   host.style.display='none';
@@ -47,6 +78,7 @@
     frame.contentWindow.postMessage({kind:'europe-handbook-navigate',hash:a.getAttribute('href')},childOrigin);
   });
   addEventListener('message',e=>{
+    if(e.origin===childOrigin&&e.source===frame.contentWindow&&e.data?.kind==='europe-handbook-cover'){openCover();return}
     if(e.origin!==childOrigin||e.source!==frame.contentWindow||e.data?.kind!=='europe-handbook-layout')return;
     const next=e.data;
     if(!Number.isFinite(next.height)||next.height<500||next.height>16000)return;
@@ -70,4 +102,5 @@
       updateVisibility();
     });
   });
+  try{if(!sessionStorage.getItem('europe-parent-cover-seen'))openCover()}catch{openCover()}
 })();
