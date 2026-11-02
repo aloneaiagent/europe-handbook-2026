@@ -62,7 +62,7 @@
   const dates=document.createElement('nav');dates.className='dates';dates.setAttribute('aria-label','选择旅行日期');
   const tabs=document.createElement('nav');tabs.className='tabs';tabs.setAttribute('aria-label','手册内容分类');
   root.append(dates,tabs);
-  let layout=null,pendingNavigation=false,dialogOpen=false;
+  let layout=null,pendingNavigation=false,dialogOpen=false,dateCenterPending=false;
   const link=(item,cls)=>{
     const a=document.createElement('a');a.href=item.hash;a.className=cls+(item.selected?' selected':'');
     if(cls==='date'){
@@ -70,12 +70,26 @@
     }else a.textContent=item.label;
     return a;
   };
+  const centerSelectedDate=()=>{
+    if(!dateCenterPending||host.style.display==='none')return;
+    const selected=dates.querySelector('.selected');
+    if(selected){
+      dates.style.scrollBehavior='auto';
+      dates.scrollLeft=selected.offsetLeft-(dates.clientWidth-selected.clientWidth)/2;
+      dates.style.scrollBehavior='';
+    }
+    dateCenterPending=false;
+  };
   const updateVisibility=()=>{
     const frameTop=scrollY+frame.getBoundingClientRect().top;
+    const showNav=!!layout?.nav&&scrollY>frameTop+layout.nav.top-4;
+    host.style.display=showNav?'block':'none';
+    host.style.pointerEvents=dialogOpen?'none':'auto';
+    const clearance=showNav?host.getBoundingClientRect().height+12:innerHeight*.08;
     frame.contentWindow.postMessage({kind:'europe-handbook-viewport',
-      top:Math.max(16,Math.ceil(scrollY-frameTop+innerHeight*.08)),maxHeight:Math.floor(innerHeight*.84)},childOrigin);
-    if(!layout?.nav){host.style.display='none';return}
-    host.style.display=!dialogOpen&&scrollY>frameTop+layout.nav.top-4?'block':'none';
+      top:Math.max(16,Math.ceil(scrollY-frameTop+clearance)),
+      maxHeight:Math.max(200,Math.floor(innerHeight-clearance-16))},childOrigin);
+    centerSelectedDate();
   };
   addEventListener('scroll',updateVisibility,{passive:true});
   addEventListener('resize',updateVisibility);
@@ -104,8 +118,7 @@
       dates.replaceChildren(...next.nav.dates.map(x=>link(x,'date')));
       tabs.replaceChildren(...next.nav.tabs.map(x=>link(x,'tab')));
       tabs.className='tabs '+(next.nav.country||'');
-      const selected=dates.querySelector('.selected');
-      if(selected)dates.scrollLeft=selected.offsetLeft-(dates.clientWidth-selected.clientWidth)/2;
+      dateCenterPending=true;
     }
     requestAnimationFrame(()=>{
       if(pendingNavigation&&routeChanged&&next.nav){
