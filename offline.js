@@ -29,19 +29,40 @@ window.HANDBOOK_EN=Object.assign(window.HANDBOOK_EN||{}, {
     if(info.type==='error')status.textContent=en?'Download could not start. Check your connection and retry.':'下载未能开始，请检查网络后重试。';
   }
   if(!('serviceWorker'in navigator)){show({type:'unsupported'});button.disabled=true;return}
+  let setup;
+  let responseTimer;
+  function expectReply(){
+    clearTimeout(responseTimer);
+    responseTimer=setTimeout(()=>{button.disabled=false;show({type:'error'})},12000);
+  }
   navigator.serviceWorker.addEventListener('message',event=>{
     const data=event.data||{};
-    if(data.type==='OFFLINE_STATUS')show({type:'ready',done:data.done,total:data.total});
-    if(data.type==='OFFLINE_PROGRESS')show({type:'downloading',done:data.done,total:data.total,failed:data.failed});
-    if(data.type==='OFFLINE_COMPLETE'){button.disabled=false;show({type:'complete',failed:data.failed.length});}
+    if(data.type==='OFFLINE_STATUS'){clearTimeout(responseTimer);show({type:'ready',done:data.done,total:data.total});}
+    if(data.type==='OFFLINE_PROGRESS'){expectReply();show({type:'downloading',done:data.done,total:data.total,failed:data.failed});}
+    if(data.type==='OFFLINE_COMPLETE'){clearTimeout(responseTimer);button.disabled=false;show({type:'complete',failed:data.failed.length});}
   });
-  async function worker(){const registration=await navigator.serviceWorker.ready;return registration.active||navigator.serviceWorker.controller}
+  function worker(){
+    return setup||(setup=(async()=>{
+      const registration=await navigator.serviceWorker.register('sw.js');
+      const ready=await Promise.race([
+        navigator.serviceWorker.ready,
+        new Promise((_,reject)=>setTimeout(()=>reject(Error('Service worker activation timed out')),12000))
+      ]);
+      const active=ready.active||registration.active||navigator.serviceWorker.controller;
+      if(!active)throw Error('No active service worker');
+      return active;
+    })().catch(error=>{setup=null;throw error}));
+  }
   window.addEventListener('load',async()=>{
-    try{(await worker())?.postMessage({type:'CHECK_OFFLINE_PACK'})}catch{show({type:'error'})}
+    try{(await worker()).postMessage({type:'CHECK_OFFLINE_PACK'});expectReply()}catch(error){console.warn('Offline setup failed:',error);show({type:'error'})}
+  });
+  navigator.serviceWorker.addEventListener('controllerchange',async()=>{
+    setup=null;
+    try{(await worker()).postMessage({type:'CHECK_OFFLINE_PACK'});expectReply()}catch(error){console.warn('Offline update failed:',error);show({type:'error'})}
   });
   button.addEventListener('click',async()=>{
     button.disabled=true;show({type:'downloading',done:0,total:last.total||0,failed:0});
-    try{(await worker())?.postMessage({type:'DOWNLOAD_OFFLINE_PACK'})}catch{button.disabled=false;show({type:'error'})}
+    try{(await worker()).postMessage({type:'DOWNLOAD_OFFLINE_PACK'});expectReply()}catch(error){console.warn('Offline download failed:',error);button.disabled=false;show({type:'error'})}
   });
   document.addEventListener('click',event=>{
     if(event.target.closest('[data-language-toggle]'))setTimeout(()=>show(last),0);
