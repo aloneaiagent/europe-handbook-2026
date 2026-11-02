@@ -45,7 +45,9 @@
   };
   const host=document.createElement('div');
   host.id='europeStickyNavigation';
-  host.style.display='none';
+  host.style.display='block';
+  host.style.visibility='hidden';
+  host.style.pointerEvents='none';
   document.body.appendChild(host);
   const root=host.attachShadow({mode:'open'});
   const style=document.createElement('style');
@@ -71,7 +73,7 @@
     return a;
   };
   const centerSelectedDate=()=>{
-    if(!dateCenterPending||host.style.display==='none')return;
+    if(!dateCenterPending||host.style.visibility!=='visible')return;
     const selected=dates.querySelector('.selected');
     if(selected){
       dates.style.scrollBehavior='auto';
@@ -82,10 +84,11 @@
   };
   const updateVisibility=()=>{
     const frameTop=scrollY+frame.getBoundingClientRect().top;
-    const showNav=!!layout?.nav&&scrollY>frameTop+layout.nav.top-4;
-    host.style.display=showNav?'block':'none';
-    host.style.pointerEvents=dialogOpen?'none':'auto';
-    const clearance=showNav?host.getBoundingClientRect().height+12:innerHeight*.08;
+    const hostHeight=host.getBoundingClientRect().height;
+    const showNav=!!layout?.nav&&scrollY>=frameTop+layout.nav.top+layout.nav.height-hostHeight+1;
+    host.style.visibility=showNav?'visible':'hidden';
+    host.style.pointerEvents=showNav&&!dialogOpen?'auto':'none';
+    const clearance=showNav?hostHeight+12:innerHeight*.08;
     frame.contentWindow.postMessage({kind:'europe-handbook-viewport',
       top:Math.max(16,Math.ceil(scrollY-frameTop+clearance)),
       maxHeight:Math.max(200,Math.floor(innerHeight-clearance-16))},childOrigin);
@@ -123,7 +126,7 @@
     requestAnimationFrame(()=>{
       if(pendingNavigation&&routeChanged&&next.nav){
         const frameTop=scrollY+frame.getBoundingClientRect().top;
-        scrollTo({top:frameTop+next.nav.top+next.nav.height-host.offsetHeight,behavior:'instant'});
+        scrollTo({top:frameTop+next.nav.top+next.nav.height-host.offsetHeight+1,behavior:'instant'});
         pendingNavigation=false;
       }
       updateVisibility();
