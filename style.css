@@ -44,3 +44,6 @@ body,.top{background:var(--paper)}.top{background:#fff;border-color:var(--line)}
 .dining-card .dish-pick{color:#c5283d;font-weight:700}.restaurant-rating{border-radius:8px;background:#eef4ff;padding:10px 12px;margin:12px 0}.restaurant-rating strong{font-size:12px;color:#285387;display:block;line-height:1.6}.restaurant-rating small{display:block;font-size:11px;color:#677a93;line-height:1.7;margin-top:4px}
 
 .offline-pack{margin:18px 0 6px;padding:14px;border:1px solid #d8e5f2;border-radius:12px;background:var(--paper,#fff)}.offline-pack h3{margin:0 0 6px;font-size:1rem}.offline-pack p{margin:6px 0}.offline-pack button{width:auto;min-height:36px;padding:6px 12px;border:1px solid #087bfa;border-radius:7px;background:#087bfa;color:#fff;font:inherit;cursor:pointer}.offline-pack button:disabled{opacity:.55;cursor:wait}
+
+#eventDialog,#settings{box-sizing:border-box;max-height:calc(100dvh - 32px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y}
+#closeEvent{position:sticky;top:0;z-index:2;background:var(--surface,#fff)}
