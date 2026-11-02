@@ -62,7 +62,7 @@
   const dates=document.createElement('nav');dates.className='dates';dates.setAttribute('aria-label','选择旅行日期');
   const tabs=document.createElement('nav');tabs.className='tabs';tabs.setAttribute('aria-label','手册内容分类');
   root.append(dates,tabs);
-  let layout=null,pendingNavigation=false;
+  let layout=null,pendingNavigation=false,dialogOpen=false;
   const link=(item,cls)=>{
     const a=document.createElement('a');a.href=item.hash;a.className=cls+(item.selected?' selected':'');
     if(cls==='date'){
@@ -75,7 +75,7 @@
     frame.contentWindow.postMessage({kind:'europe-handbook-viewport',
       top:Math.max(16,Math.ceil(scrollY-frameTop+innerHeight*.08)),maxHeight:Math.floor(innerHeight*.84)},childOrigin);
     if(!layout?.nav){host.style.display='none';return}
-    host.style.display=scrollY>frameTop+layout.nav.top-4?'block':'none';
+    host.style.display=!dialogOpen&&scrollY>frameTop+layout.nav.top-4?'block':'none';
   };
   addEventListener('scroll',updateVisibility,{passive:true});
   addEventListener('resize',updateVisibility);
@@ -88,6 +88,11 @@
   });
   addEventListener('message',e=>{
     if(e.origin===childOrigin&&e.source===frame.contentWindow&&e.data?.kind==='europe-handbook-cover'){openCover();return}
+    if(e.origin===childOrigin&&e.source===frame.contentWindow&&e.data?.kind==='europe-handbook-dialog'){
+      dialogOpen=!!e.data.open;
+      updateVisibility();
+      return;
+    }
     if(e.origin!==childOrigin||e.source!==frame.contentWindow||e.data?.kind!=='europe-handbook-layout')return;
     const next=e.data;
     if(!Number.isFinite(next.height)||next.height<500||next.height>16000)return;

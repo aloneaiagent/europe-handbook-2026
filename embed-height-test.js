@@ -18,6 +18,12 @@
       theme:document.documentElement.dataset.theme||'light'},target);
   };
   new ResizeObserver(send).observe(document.body);
+  const reportDialogState=()=>{
+    parent.postMessage({kind:'europe-handbook-dialog',open:!!document.querySelector('#eventDialog[open],#settings[open]')},target);
+  };
+  for(const dialog of document.querySelectorAll('#eventDialog,#settings')){
+    new MutationObserver(reportDialogState).observe(dialog,{attributes:true,attributeFilter:['open']});
+  }
   addEventListener('load',send);
   addEventListener('hashchange',()=>requestAnimationFrame(send));
   addEventListener('message',event=>{
