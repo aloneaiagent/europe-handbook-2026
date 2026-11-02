@@ -139,3 +139,20 @@ body[data-page=overview] .overview-intro{padding-right:65px}
 .journey-provider-rows .google-nav-link{justify-content:center;min-width:0;padding:5px!important;font-size:10px!important;gap:3px!important}
 .journey-provider-rows .google-place-name{max-width:100%;font-size:10px}
 .header-controls .overview-tools-rail{left:auto;right:5px;bottom:auto;width:32px;margin:0;padding:0;align-items:center;justify-content:flex-start;overflow:visible;border:0;background:transparent}
+#eventDialog{padding:18px 20px;font-size:15px;line-height:1.6}
+#eventContent h2{margin:4px 0 8px;font-family:inherit;font-size:20px;line-height:1.35;font-weight:700}
+#eventContent h3{margin:16px 0 6px;font-size:15px;line-height:1.4;font-weight:700}
+#eventContent>p{margin:8px 0;font-size:15px;line-height:1.6}
+#eventContent .full-note{line-height:1.6}
+#eventDialog .ticket-detail{margin:12px 0;padding:12px 14px;border-radius:9px}
+#eventDialog .ticket-detail h3{margin:0 0 6px;font-size:14px}
+#eventDialog .ticket-detail dl>div{grid-template-columns:80px minmax(0,1fr);gap:8px;padding:7px 0}
+#eventDialog .ticket-detail dt{font-size:12px;line-height:1.5}
+#eventDialog .ticket-detail dd{font-size:14px;line-height:1.5}
+#eventDialog .ticket-detail small{margin-top:8px;font-size:12px;line-height:1.45}
+#eventDialog .links{margin-top:8px}
+#closeEvent{margin-bottom:6px;padding:4px 8px;font-size:12px;line-height:1.4}
+#settings{padding:20px;font-size:14px;line-height:1.6}
+#settings .dialog-head h2{margin:0;font-size:20px;line-height:1.35}
+#settings p{margin:8px 0;font-size:14px;line-height:1.6}
+@media(max-width:600px){#eventDialog{padding:16px 18px}#settings{padding:18px}}
